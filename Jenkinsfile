@@ -1,15 +1,23 @@
 pipeline {
-    agent any
-    stages {
-        stage('Build image') {
-            steps {
-                echo 'Starting to build docker image'
+  environment {
+    imagename = "user-mysql"
+    registryCredential = 'siddharthdockerid-Sn@782870'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    stage('Cloning Git') {
+      steps {
+        git([url: 'https://github.com/siddharthnikhara/test.git', branch: 'master', credentialsId: 'siddharthnikhara@gmail.com'])
 
-                script {
-                    def customImage = docker.build("user-mysql:${env.BUILD_ID}")
-                    customImage.push()
-                }
-            }
-        }
+      }
     }
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build user-mysql
+        }
+      }
+    }
+  }
 }
