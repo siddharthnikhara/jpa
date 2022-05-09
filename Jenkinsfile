@@ -1,7 +1,15 @@
 pipeline {
-    agent { dockerfile true }
+    agent any
     stages {
-        stage('Test') {
+        stage('Build image') {
+            steps {
+                echo 'Starting to build docker image'
+
+                script {
+                    def customImage = docker.build("user-mysql:${env.BUILD_ID}")
+                    customImage.push()
+                }
+            }
         }
     }
 }
